@@ -1,7 +1,6 @@
 import re
 import argparse
 
-
 symbols = {
         r'\\left' : '',
         r'\\right' : '',
@@ -152,29 +151,39 @@ def remBrackets(s):
     return s            
         
             
-def main():
-    
-    while True:
-        
-        s = input("Paste your expression: ")
-    
-        for k, v in symbols.items():
-            s = re.sub(k, v, s)
-            
-        for k, v in ops.items():
-            s = re.sub(k, v, s)
-            
-        for k, v in consts.items():
-            s = re.sub(k, v, s)
-            
-        for f in funs:
-            s = repFunctions(f, s)   
-            
-        s = insMultiply(s)
-        
-        s = remBrackets(s)
-            
-        print('result: ' + s)
+def main(expression:str):
+    """Input LaTeX string and python code will be returned
 
+    Args:
+        expression (str): LaTeX string
+
+    Returns:
+        str: Python Code
+    """
+    
+    s = expression
+
+    for k, v in symbols.items():
+        s = re.sub(k, v, s)
+        
+    for k, v in ops.items():
+        s = re.sub(k, v, s)
+        
+    for k, v in consts.items():
+        s = re.sub(k, v, s)
+        
+    for f in funs:
+        s = repFunctions(f, s)   
+        
+    s = insMultiply(s)
+    
+    s = remBrackets(s)
+        
+    return s
+
+parser = argparse.ArgumentParser(description="Turn LaTeX into Python code", usage="%(prog)s LaTeXString")
+parser.add_argument("LaTeXString")
 if __name__ == "__main__":
-    main()
+
+    args = parser.parse_args()
+    print(main(args.LaTeXString))
